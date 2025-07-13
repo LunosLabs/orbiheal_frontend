@@ -1,0 +1,37 @@
+[
+  {
+    "id": "med001",
+    "name": "Paracetamol 500mg",
+    "manufacturer": "PharmaLife Pvt Ltd",
+    "price": 12.50,
+    "schedule": "Schedule H"
+  },
+  {
+    "id": "med002",
+    "name": "Azithromycin 250mg",
+    "manufacturer": "HealthCure Labs",
+    "price": 35.00,
+    "schedule": "Schedule H"
+  },
+  {
+    "id": "med003",
+    "name": "Cetrizine Hydrochloride",
+    "manufacturer": "Wellness Remedies",
+    "price": 8.20,
+    "schedule": "Schedule "
+  },
+  {
+    "id": "med004",
+    "name": "Ibuprofen 400mg",
+    "manufacturer": "MediCore Pharma",
+    "price": 18.00,
+    "schedule": "Schedule H"
+  },
+  {
+    "id": "med005",
+    "name": "Amoxicillin 500mg",
+    "manufacturer": "SafeMeds India",
+    "price": 28.75,
+    "schedule": "Schedule H"
+  }
+]

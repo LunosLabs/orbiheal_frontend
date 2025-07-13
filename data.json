@@ -1,0 +1,46 @@
+{
+  "data": {
+    "id": "22750924-0581-478c-88ad-f342a981ba47",
+    "brand_name": "calpol",
+    "generic_name": "paracetamol",
+    "manufacturer": "glaxosmithkline pharmaceuticals ltd",
+    "form": "tablet / oral suspension",
+    "strength": "500 mg, 650 mg (tablet); 120 mg/5ml (infant suspension)",
+    "regulatory_status": "otc",
+    "max_price": 40,
+    "min_price": 20,
+    "last_updated": "2025-06-25T16:40:04.050604+00:00",
+    "created_at": "2025-06-25T16:40:04.050604+00:00",
+    "medicine_details": {
+      "warnings": [
+        "Do not use with other products containing paracetamol.",
+        "Consult your doctor if you have liver or kidney disease.",
+        "Avoid alcohol while taking this medicine."
+      ],
+      "created_at": "2025-06-25T16:40:04.744333+00:00",
+      "expert_tips": [
+        "Take with food or milk to minimize stomach upset.",
+        "Do not exceed recommended dose.",
+        "Consult your doctor if fever persists for more than 3 days."
+      ],
+      "how_it_helps": "Calpol provides relief from mild to moderate pain and reduces fever by blocking the production of prostaglandins, chemicals responsible for pain and fever in the body.",
+      "last_reviewed": "2025-06-25T16:40:04.744333+00:00",
+      "who_should_skip": [
+        "People allergic to paracetamol.",
+        "Patients with severe liver impairment.",
+        "Children under 2 months (for infant suspension) unless advised by a doctor."
+      ],
+      "side_effects_common": [
+        "Nausea",
+        "Vomiting",
+        "Headache",
+        "Constipation"
+      ],
+      "side_effects_serious": [
+        "Allergic reactions (rash, swelling, difficulty breathing)",
+        "Liver damage (with overdose or prolonged use)"
+      ],
+      "when_and_how_to_take": "Take as directed by your doctor or as per the label. For tablets, take with food or milk to avoid stomach upset. For infants and children, use the oral suspension with the provided dosing syringe. Do not exceed 4 doses in 24 hours and leave at least 4 hours between doses."
+    }
+  }
+}
