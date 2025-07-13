@@ -9,24 +9,14 @@ import ProTipsSection from "@/components/publicComponents/MedicinePackComponents
 import MedicineFooter from "@/components/publicComponents/MedicinePackComponents/MedicineFooter";
 import AgeSuitabilityTags from "@/components/publicComponents/MedicinePackComponents/AgeSuitabilityTags";
 
-export const revalidate = 300; 
 
 export default async function Page({ params }) {
   const id = (await params)?.id ?? "";
-
-  if (!id) {
-    redirect("/dashboard/medicines");
+  if(!id){
+    redirect("/dashboard/medicine")
   }
-
   try {
-    const {
-      data: { medicine, details, attributes, generic, manufacturer, form },
-    } = await fetchMedicineById(id);
-
-    if (!medicine) {
-      redirect("/dashboard/medicines");
-    }
-
+    const { medicine, details, attributes, generic, manufacturer, form } = await fetchMedicineById(id); 
     return (
       <div className="mx-auto min-h-screen max-w-4xl py-2 font-sans text-white sm:px-6 lg:px-12">
         <div className="space-y-6">
@@ -98,6 +88,8 @@ export default async function Page({ params }) {
       </div>
     );
   } catch (error) {
-    redirect("/dashboard/medicines");
+    console.log(error);
+    
+    redirect("/dashboard/medicine");
   }
 }
