@@ -2,98 +2,97 @@
 
 import React, { useState, useCallback } from "react";
 import EditEntityActions from "./EditEntityActions";
-import { EditJsonEditor } from "./EditJsonEditor";
-import { schemas } from "@/lib/entityConfig";
-import { ZodError } from "zod";
 import { getChangedFields } from "./GetChangedFields";
+import { schemas } from "@/lib/entityConfig";
+import { JsonEditor } from "../JsonEditor";
 
-export default React.memo(function EditEntityEditor({ entityType, id, entityData }) { 
-  const [code, setCode] = useState(() => JSON.stringify(entityData, null, 2));
+export default function EditEntityEditor({ entityType, id, entityData }) {
+  if (!entityType) {
+    throw new Error("EditEntityEditor: entityType prop is required");
+  }
+
+  const schema = schemas[entityType];
+  if (!schema) {
+    throw new Error(`EditEntityEditor: Unknown schema for "${entityType}"`);
+  }
+
+  const [code, setCode] = useState(JSON.stringify(entityData, null, 2));
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const schema = schemas[entityType]?.schema;
-
-  if (!schema) {
-    return (
-      <div className="text-red-400 text-center p-4">
-        Invalid entity type: {entityType}
-      </div>
-    );
-  }
 
   const showMessage = useCallback((setter, msg) => {
     setter(msg);
     setTimeout(() => setter(""), 4000);
   }, []);
 
-  const handleSave = useCallback(
-    async (e) => {
-      e.preventDefault();
-      setLoading(true);
-      setError("");
-      setSuccess("");
-      try {
-        const currentData = JSON.parse(code);
+  const handleSave = useCallback(async (e) => {
+    e.preventDefault();
+    if (loading) return;
 
-        // Validate if you want (optional)
-        // schema.parse(currentData);
+    setLoading(true);
+    setError("");
+    setSuccess("");
 
-        const changes = getChangedFields(currentData, entityData);
+    try {
+      const parsedData = JSON.parse(code);
+      const changes = getChangedFields(parsedData, entityData);
 
-        if (Object.keys(changes).length > 0) {
-
-          showMessage(setSuccess, `Successfully updated ${entityType}`);
-        } else {
-
-        }
-      } catch (err) {
-        if (err instanceof ZodError) {
-          showMessage(setError, err.errors[0]?.message || "Validation error");
-        } else {
-          showMessage(setError, err?.message || "Failed to update entity.");
-        }
-      } finally {
-        setLoading(false);
+      if (Object.keys(changes).length === 0) {
+        showMessage(setError, "No changes to save.");
+        return;
       }
-    },
-    [entityType, id, code, schema, showMessage, entityData]
-  );
 
-  let isChanged = false;
-  try {
-    const parsedCode = JSON.parse(code);
-    const changes = getChangedFields(parsedCode, entityData);
-    isChanged = Object.keys(changes).length > 0;
-  } catch {
-    isChanged = false;
-  }
+      // TODO: Actually send 'changes' to your backend here
+      console.log("Updating fields:", changes);
+
+      showMessage(setSuccess, `Successfully updated ${entityType}.`);
+    } catch (err) {
+      showMessage(
+        setError,
+        err instanceof SyntaxError
+          ? "Invalid JSON syntax. Please fix the errors."
+          : err?.message || "Failed to update entity."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [entityType, code, entityData, showMessage, loading]);
+
+  const isChanged = (() => {
+    try {
+      return JSON.stringify(JSON.parse(code)) !== JSON.stringify(entityData);
+    } catch {
+      return false;
+    }
+  })();
 
   return (
-    <div className="flex flex-col h-full w-full max-w-3xl mx-auto sm:p-6 rounded-lg shadow-xl">
+    <div className="mx-auto w-full max-w-5xl flex flex-col gap-4 rounded-lg shadow-xl">
       {(error || success) && (
-        <div className="flex justify-center my-3 space-x-2">
+        <div className="flex flex-wrap justify-center gap-2">
           {error && (
-            <p className="text-red-500 text-sm bg-red-900/70 border border-red-600 rounded px-4 py-2 shadow-lg transition-all duration-300 font-semibold tracking-wide backdrop-blur-sm">
+            <p className="rounded-lg border border-red-600 bg-red-900/50 px-4 py-2 text-sm font-semibold text-red-400 shadow-md">
               {error}
             </p>
           )}
           {success && (
-            <p className="text-green-400 text-sm bg-green-900/70 border border-green-600 rounded px-4 py-2 shadow-lg transition-all duration-300 font-semibold tracking-wide backdrop-blur-sm">
+            <p className="rounded-lg border border-green-600 bg-green-900/50 px-4 py-2 text-sm font-semibold text-green-400 shadow-md">
               {success}
             </p>
           )}
         </div>
       )}
-      <div className="flex flex-col w-full h-[75vh] rounded-lg shadow-lg overflow-hidden">
-        <EditJsonEditor
+
+      <div className="flex h-[80vh] sm:h-[85vh] flex-col overflow-hidden rounded-lg shadow-inner">
+        <JsonEditor
           code={code}
           onCodeChange={setCode}
           error={error}
           setError={setError}
         />
-        <div className="pb-2 px-2 rounded-b-lg py-4">
+
+        <div className="flex justify-end p-4">
           <EditEntityActions
             loading={loading}
             hasChanges={isChanged}
@@ -103,4 +102,4 @@ export default React.memo(function EditEntityEditor({ entityType, id, entityData
       </div>
     </div>
   );
-});
+}

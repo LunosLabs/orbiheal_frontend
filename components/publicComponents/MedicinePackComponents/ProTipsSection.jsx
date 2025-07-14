@@ -1,39 +1,32 @@
 import React from "react";
 import { Lightbulb } from "lucide-react";
 
-export default function ProTipsSection({ title, content }) {
-  if (!content?.length) return null;
+export default function ProTipsSection({ data }) {
+  if (!data || !data.content) return null;
+  const { category_description, content } = data;
 
   return (
     <section
-      className="my-6 px-5 py-4 rounded-lg bg-blue-950/40 border border-blue-800"
-      aria-label={title || "Pro Tips"}
+      className="my-6 p-5 rounded-xl bg-blue-950/40 border border-blue-800 shadow-lg"
+      aria-label={category_description || "Pro Tips"}
     >
       {/* Header */}
-      <div className="flex items-center gap-2 mb-3">
-        <span className="relative flex items-center justify-center">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="flex items-center justify-center">
           <Lightbulb
-            className="w-5 h-5 text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.7)]"
+            className="w-6 h-6 text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.7)]"
             aria-hidden="true"
           />
         </span>
-        <h2 className="text-lg font-bold text-blue-200">
-          {title}
+        <h2 className="text-[18px] sm:text-[19px] font-bold text-blue-200 tracking-wide">
+          {category_description}
         </h2>
       </div>
 
-      {/* Tips List */}
-      <ul className="space-y-2 text-[16px] text-neutral-100">
-        {content.map((item, idx) => (
-          <li
-            key={idx}
-            className="flex items-start gap-2"
-          >
-            <span className="inline-block w-2 h-2 mt-2 rounded-full bg-yellow-300 shadow-[0_0_6px_2px_rgba(253,224,71,0.5)]" />
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
+      {/* Tips Content */}
+      <div className="text-[16px] sm:text-[17px] leading-relaxed text-neutral-100 max-w-prose">
+        {content}
+      </div>
     </section>
   );
 }

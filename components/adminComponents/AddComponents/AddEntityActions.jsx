@@ -2,14 +2,25 @@
 
 import { Button } from "@/components/ui/button";
 import { EllipsisSpinner } from "@/components/fields/EllipsisSpinner";
+import { SparklesIcon } from "lucide-react";
 
-export default function EditEntityActions({
+export default function AddEntityActions({
   loading,
   hasChanges,
   handleSave,
+  handleAutofill,
 }) {
   return (
     <div className="flex flex-wrap justify-end gap-2">
+      <Button
+        onClick={handleAutofill}
+        type="button"
+        className="flex items-center gap-2 rounded-lg border border-primary bg-transparent px-4 text-sm font-medium text-primary hover:bg-primary/20"
+        disabled={loading}
+      >
+        <SparklesIcon className="h-5 w-5" />
+        Autofill
+      </Button>
       <Button
         onClick={handleSave}
         disabled={loading || !hasChanges}
@@ -18,10 +29,10 @@ export default function EditEntityActions({
         {loading ? (
           <span className="flex items-center gap-2">
             <EllipsisSpinner size={16} color="#fff" />
-            Saving...
+            Creating...
           </span>
         ) : (
-          "Save Changes"
+          "Create"
         )}
       </Button>
     </div>

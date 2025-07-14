@@ -9,26 +9,39 @@ const adminLinks = [
 
 export default function AdminPage() {
   return (
-    <main className="flex flex-col items-center min-h-screen  text-gray-100 px-2 py-4">
-      <h1 className="text-3xl font-semibold mb-8 text-gray-50 tracking-tight">
-        Admin Dashboard
-      </h1>
-      <div className="grid gap-4 w-full max-w-md">
-        {adminLinks.map((link) => (
-          <AdminLink key={link.href} href={link.href} label={link.label} />
-        ))}
+    <main className="min-h-screen w-full flex flex-col items-center  text-gray-100">
+      <div className="w-full max-w-3xl">
+        <h1 className="text-center text-3xl sm:text-4xl font-bold text-primary mb-6">
+          Admin Dashboard
+        </h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {adminLinks.map((link) => (
+            <AdminCardLink key={link.href} href={link.href} label={link.label} />
+          ))}
+        </div>
       </div>
     </main>
   );
 }
 
-function AdminLink({ href, label }) {
+function AdminCardLink({ href, label }) {
   return (
     <Link
       href={href}
-      className="block w-full rounded-md bg-gray-800/50 hover:bg-gray-700/70 border border-gray-700 hover:border-blue-500 transition-all duration-200 ease-in-out shadow-sm px-4 py-2 text-sm font-medium text-gray-200 hover:text-blue-300"
+      className="
+        group block rounded-lg border border-gray-700 bg-black 
+        hover:border-blue-500 hover:bg-gray-900 transition-all duration-200
+        shadow-sm
+      "
     >
-      {label}
+      <div className="p-4 flex flex-col gap-1">
+        <h2 className="text-base sm:text-lg font-medium text-gray-100 group-hover:text-blue-400 transition-colors">
+          {label}
+        </h2>
+        <span className="text-xs text-gray-500 group-hover:text-blue-400 transition-colors">
+          Go to page →
+        </span>
+      </div>
     </Link>
   );
 }

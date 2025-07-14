@@ -1,7 +1,8 @@
 import React from "react";
 
-export default function TextList({ title, content, highlight }) {
-  if (!content.length) return null;
+export default function TextList({ data , highlight}) {
+  if (!data || !data.content) return null;
+  const { category_description, content } = data;
 
   return (
     <section
@@ -11,6 +12,7 @@ export default function TextList({ title, content, highlight }) {
           : ""
       }`}
     >
+      {/* Section Header */}
       <div className="flex items-center gap-2 mb-2">
         {highlight && (
           <span
@@ -25,14 +27,16 @@ export default function TextList({ title, content, highlight }) {
               : "text-[17px] sm:text-[18px] text-blue-300"
           }`}
         >
-          {title}
+          {category_description}
         </h2>
       </div>
-      <ul className="space-y-2 text-[16px] leading-relaxed text-neutral-100 max-w-prose font-normal list-disc list-inside pl-5">
-        {content.map((item, idx) => (
-          <li key={idx}>{item}</li>
-        ))}
-      </ul>
+
+      {/* Description Content */}
+      <div className="text-[16px] leading-relaxed text-neutral-100 max-w-prose space-y-2">
+        <div className="text-neutral-100">
+          {content}
+        </div>
+      </div>
     </section>
   );
 }

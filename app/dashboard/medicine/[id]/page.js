@@ -9,87 +9,76 @@ import ProTipsSection from "@/components/publicComponents/MedicinePackComponents
 import MedicineFooter from "@/components/publicComponents/MedicinePackComponents/MedicineFooter";
 import AgeSuitabilityTags from "@/components/publicComponents/MedicinePackComponents/AgeSuitabilityTags";
 
-
 export default async function Page({ params }) {
   const id = (await params)?.id ?? "";
-  if(!id){
-    redirect("/dashboard/medicine")
-  }
-  try {
-    const { medicine, details, attributes, generic, manufacturer, form } = await fetchMedicineById(id); 
-    return (
-      <div className="mx-auto min-h-screen max-w-4xl py-2 font-sans text-white sm:px-6 lg:px-12">
-        <div className="space-y-6">
-          <MedicineHeader medicine={medicine} generic={generic} />
-          <BasicInfo medicine={medicine} form={form} manufacturer={manufacturer} />
-          <PriceInfo medicine={medicine} />
-          <AgeSuitabilityTags ageGroups={medicine?.age_group_suitability ?? []} />
+  if (!id) redirect("/dashboard");
 
-          <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
-            <DescriptionSection
-              title="Onset Of Action"
-              content={details?.onset_of_action ?? "Not available"}
-            />
-            <DescriptionSection
-              title="Duration of Effect"
-              content={details?.duration_of_effect ?? "Not available"}
-            />
-            <DescriptionSection
-              title="How It Helps"
-              content={details?.indication ?? "Not available"}
-            />
-            <DescriptionSection
-              title="Dosage Instructions"
-              content={details?.dosage_instructions ?? "Not available"}
-            />
-          </div>
+  const rawData = await fetchMedicineById(id);
+  const { medicine, details, generic, manufacturer, form } = rawData;
+  const attributes = groupAttributesByCode(rawData.attributes);
 
-          <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
-            <TextList
-              title="Common Side Effects"
-              content={attributes?.side_effects_common ?? []}
-            />
-            <TextList
-              title="Rare Side Effects"
-              content={attributes?.side_effects_serious ?? []}
-              highlight
-            />
-          </div>
+  return (
+    <div className="mx-auto min-h-screen max-w-7xl py-2 sm:px-8 lg:px-16 xl:px-24 font-sans text-white">
+      <div className="space-y-10">
+        <MedicineHeader medicine={medicine} generic={generic} />
+        <BasicInfo
+          medicine={medicine}
+          form={form}
+          manufacturer={manufacturer}
+        />
+        <PriceInfo medicine={medicine} />
+        <AgeSuitabilityTags ageGroups={medicine?.age_group_suitability ?? []} />
 
-          <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
-            <TextList
-              title="Important Safety Warnings"
-              content={attributes?.warnings ?? []}
-              highlight
-            />
-            <TextList
-              title="Who Should Avoid This"
-              content={attributes?.contraindications ?? []}
-            />
-          </div>
-
-          <TextList
-            title="Potential Drug Interactions"
-            content={attributes?.interactions ?? []}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <DescriptionSection
+            title="Onset Of Action"
+            content={details?.onset_of_action ?? "Not available"}
           />
-
-          <ProTipsSection
-            title="Expert Tips & Guidance"
-            content={attributes?.pro_tips ?? []}
+          <DescriptionSection
+            title="Duration of Effect"
+            content={details?.duration_of_effect ?? "Not available"}
           />
-
-          <TextList
-            title="Additional Precautions"
-            content={attributes?.precautions ?? []}
+          <DescriptionSection
+            title="How It Helps"
+            content={details?.indication ?? "Not available"}
           />
-
-          <MedicineFooter last_reviewed={medicine.updated_at ?? null} />
+          <DescriptionSection
+            title="Dosage Instructions"
+            content={details?.dosage_instructions ?? "Not available"}
+          />
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {attributes.side_effects_common && (
+            <TextList data={attributes.side_effects_common} />
+          )}
+          {attributes.side_effects_serious && (
+            <TextList data={attributes.side_effects_serious} highlight />
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {attributes.warnings && (
+            <TextList data={attributes.warnings} highlight />
+          )}
+          {attributes.contraindications && (
+            <TextList data={attributes.contraindications} />
+          )}
+        </div>
+
+        {attributes.pregnancy && <TextList data={attributes.pregnancy} />}
+        {attributes.pro_tips && <ProTipsSection data={attributes.pro_tips} />}
+        {attributes.precautions && <TextList data={attributes.precautions} />}
+
+        <MedicineFooter last_reviewed={medicine.updated_at ?? null} />
       </div>
-    );
-  } catch (error) {
-    console.log(error);
-    
-    redirect("/dashboard/medicine");
-  }
+    </div>
+  );
+}
+
+function groupAttributesByCode(attributesArray = []) {
+  return attributesArray.reduce((result, attr) => {
+    result[attr.category_code] = attr;
+    return result;
+  }, {});
 }
